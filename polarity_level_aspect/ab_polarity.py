@@ -1,7 +1,6 @@
 import codecs
 import sys
 
-sys.path.append("..")
 from utils.data_helper import load_attr_data, load_w2v, load_ab_test, load_abp_data, parse_json, load_abp_raw
 
 import polarity_level_aspect.networks as networks
@@ -23,6 +22,10 @@ from sklearn.linear_model import LogisticRegression
 # import xgboost as xgb
 # from lightgbm import LGBMClassifier
 
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+sys.path.append("ROOT_DIR")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--EPOCHS", type=int, default=5)
@@ -94,7 +97,7 @@ class Classifier:  # Neural network method
 
         if args.use_elmo != 0:
             import h5py
-            elmo_dict = h5py.File('../embedding/embeddings_elmo_ly-1.hdf5', 'r')
+            elmo_dict = h5py.File(ROOT_DIR+'/embedding/embeddings_elmo_ly-1.hdf5', 'r')
             for s in train_raw_data[0]:
                 sentence = '\t'.join(s)
                 sentence = sentence.replace('.', '$period$')
@@ -256,24 +259,24 @@ def count_instance(fo):
 
 
 def ensemble():
-    f_train = "../data/train.txt"
+    f_train = ROOT_DIR+"/data/train.txt"
     if args.w2v == "merge":
-        f_w2v = "../embedding/embedding_all_merge_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
     elif args.w2v == "fasttext2":
-        f_w2v = "../embedding/embedding_all_fasttext2_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_fasttext2_300.txt"
     elif args.w2v == "tencent":
-        f_w2v = "../embedding/embedding_all_tencent_200.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_tencent_200.txt"
     else:
         print("error, no embedding")
         exit(-1)
-    f_dict1 = "../dataset/polarity.json"
-    f_dict2 = "../dataset/attribute.json"
+    f_dict1 = ROOT_DIR+"/dataset/polarity.json"
+    f_dict2 = ROOT_DIR+"/dataset/attribute.json"
     print(f_train)
     print(f_w2v)
     if not os.path.exists("%s" % args.check_dir):
         os.mkdir("%s" % args.check_dir)
     W, word2index2 = load_w2v(f_w2v)
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
     assert word2index == word2index2
     polarity_list, polarity_dict = parse_json(f_dict1)
     attr_list, attr_dict = parse_json(f_dict2)
@@ -297,21 +300,21 @@ def ensemble():
 
 
 def main():
-    f_train = "../data/train.txt"
+    f_train = ROOT_DIR+"/data/train.txt"
     f_test = "data/test_p.txt"
     if args.w2v == "merge":
-        f_w2v = "../embedding/embedding_all_merge_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
     elif args.w2v == "fasttext":
-        f_w2v = "../embedding/embedding_all_fasttext_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_fasttext_300.txt"
     elif args.w2v == "fasttext2":
-        f_w2v = "../embedding/embedding_all_fasttext2_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_fasttext2_300.txt"
     elif args.w2v == "tencent":
-        f_w2v = "../embedding/embedding_all_tencent_200.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_tencent_200.txt"
     else:
         print("error, no embedding")
         exit(-1)
-    f_dict1 = "../dataset/polarity.json"
-    f_dict2 = "../dataset/attribute.json"
+    f_dict1 = ROOT_DIR+"/dataset/polarity.json"
+    f_dict2 = ROOT_DIR+"/dataset/attribute.json"
     print(f_w2v)
     # train_texts, train_labels = load_attr_data(filename=f_train)
     # # test_text, test_labels = load_attr_data(filename=f_test)
@@ -322,7 +325,7 @@ def main():
     print(len(train_texts))
     print(len(test_texts))
     W, word2index2 = load_w2v(f_w2v)
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
     assert word2index == word2index2
     polarity_list, polarity_dict = parse_json(f_dict1)
     attr_list, attr_dict = parse_json(f_dict2)
@@ -338,14 +341,14 @@ def main():
 
 def test():
     # model = Classifier()
-    test_file1 = "../attribute_level/data/attribute_test.txt"
-    test_file2 = "../attribute_level/test_predict.txt"
+    test_file1 = ROOT_DIR+"/attribute_level/data/attribute_test.txt"
+    test_file2 = ROOT_DIR+"/attribute_level/test_predict.txt"
     test_texts, test_aspects = load_ab_test(test_file1, test_file2)
-    f_w2v = "../embedding/embedding_all_merge_300.txt"
+    f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
     W, word2index = load_w2v(f_w2v)
 
-    f_dict1 = "../dataset/polarity.json"
-    f_dict2 = "../dataset/attribute.json"
+    f_dict1 = ROOT_DIR+"/dataset/polarity.json"
+    f_dict2 = ROOT_DIR+"/dataset/attribute.json"
     polarity_list, polarity_dict = parse_json(f_dict1)
     attr_list, attr_dict = parse_json(f_dict2)
 
@@ -388,7 +391,7 @@ def test():
 def load_elmo(test_texts):
     test_elmo = []
     import h5py
-    elmo_dict = h5py.File('../embedding/embeddings_elmo_ly-1.hdf5', 'r')
+    elmo_dict = h5py.File(ROOT_DIR+'/embedding/embeddings_elmo_ly-1.hdf5', 'r')
     for s in test_texts:
         sentence = '\t'.join(s)
         sentence = sentence.replace('.', '$period$')
@@ -523,18 +526,18 @@ def softmax(x):
 def stacking():
     # saved = True if args.saved != 0 else False
     saved = args.saved
-    f_train = "../data/train.txt"
-    test_file1 = "../data/test.txt"
-    test_file2 = "../data/test_predict_aspect_ensemble.txt"
+    f_train = ROOT_DIR+"/data/train.txt"
+    test_file1 = ROOT_DIR+"/data/test.txt"
+    test_file2 = ROOT_DIR+"/data/test_predict_aspect_ensemble.txt"
     test_texts, test_aspects = load_ab_test(test_file1, test_file2)
     # print(test_aspects)
 
     fo = load_abp_raw(f_train)
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
 
-    f_dict = "../dataset/polarity.json"
+    f_dict = ROOT_DIR+"/dataset/polarity.json"
     polarity_list, polarity_dict = parse_json(f_dict)
-    f_dict2 = "../dataset/attribute.json"
+    f_dict2 = ROOT_DIR+"/dataset/attribute.json"
     attr_list, attr_dict = parse_json(f_dict2)
 
     paths = args.test_dir.split('#')
@@ -589,29 +592,29 @@ def stacking():
     meta_clf = LogisticRegression()
     meta_clf.fit(x_train, y_train)
     test_predict = meta_clf.predict_proba(x_test)
-    fw = codecs.open("../data/test_predict_polarity_ensemble.txt", 'w', encoding='utf-8')
+    fw = codecs.open(ROOT_DIR+"/data/test_predict_polarity_ensemble.txt", 'w', encoding='utf-8')
     for j, prob in enumerate(test_predict):
         polarity = np.argmax(prob)-1
         fw.write(test_aspects[j] + ',' + str(polarity) + '\n')
     time_stamp = time.asctime().replace(':', '_').split()
     fw.close()
-    shutil.copy2("../data/test_predict_polarity_ensemble.txt",
-                 "../data/backup/test_predict_polarity_ensemble_%s.txt" % time_stamp)
+    shutil.copy2(ROOT_DIR+"/data/test_predict_polarity_ensemble.txt",
+                 ROOT_DIR+"/data/backup/test_predict_polarity_ensemble_%s.txt" % time_stamp)
 
 
 def blending():
     # saved = True if args.saved != 0 else False
     saved = args.saved
-    test_file1 = "../data/test.txt"
-    test_file2 = "../data/test_predict_aspect_ensemble.txt"
+    test_file1 = ROOT_DIR+"/data/test.txt"
+    test_file2 = ROOT_DIR+"/data/test_predict_aspect_ensemble.txt"
     test_texts, test_aspects = load_ab_test(test_file1, test_file2)
     # print(test_aspects)
 
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
 
-    f_dict = "../dataset/polarity.json"
+    f_dict = ROOT_DIR+"/dataset/polarity.json"
     polarity_list, polarity_dict = parse_json(f_dict)
-    f_dict2 = "../dataset/attribute.json"
+    f_dict2 = ROOT_DIR+"/dataset/attribute.json"
     attr_list, attr_dict = parse_json(f_dict2)
 
     paths = args.test_dir.split('#')
@@ -636,14 +639,14 @@ def blending():
     print(x_test)
     print(x_test.shape)
     test_predict = np.mean(x_test, axis=1)
-    fw = codecs.open("../data/test_predict_polarity_ensemble.txt", 'w', encoding='utf-8')
+    fw = codecs.open(ROOT_DIR+"/data/test_predict_polarity_ensemble.txt", 'w', encoding='utf-8')
     for j, prob in enumerate(test_predict):
         polarity = np.argmax(prob)-1
         fw.write(test_aspects[j] + ',' + str(polarity) + '\n')
     time_stamp = time.asctime().replace(':', '_').split()
     fw.close()
-    shutil.copy2("../data/test_predict_polarity_ensemble.txt",
-                 "../data/backup/test_predict_polarity_ensemble_%s.txt" % time_stamp)
+    shutil.copy2(ROOT_DIR+"/data/test_predict_polarity_ensemble.txt",
+                 ROOT_DIR+"/data/backup/test_predict_polarity_ensemble_%s.txt" % time_stamp)
 
 
 if __name__ == '__main__':

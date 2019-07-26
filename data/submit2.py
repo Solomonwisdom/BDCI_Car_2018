@@ -1,8 +1,13 @@
 import codecs
-f_example = codecs.open("test_public_2.csv", encoding='utf-8').readlines()
-fw = codecs.open("submit2.csv", 'w', encoding='utf-8')
-f_aspect = codecs.open("test_predict_aspect_ensemble.txt", encoding='utf-8').readlines()
-f_polarity = codecs.open("test_predict_polarity_ensemble.txt", encoding='utf-8').readlines()
+import os
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+f_example = codecs.open(BASE_DIR + "test_public_2.csv", encoding='utf-8').readlines()
+fw = codecs.open(BASE_DIR + "submit2.csv", 'w', encoding='utf-8')
+f_aspect = codecs.open(BASE_DIR + "test_predict_aspect_ensemble.txt", encoding='utf-8').readlines()
+f_polarity = codecs.open(BASE_DIR + "test_predict_polarity_ensemble.txt", encoding='utf-8').readlines()
 
 fw.write("content_id,subject,sentiment_value,sentiment_word\r\n")
 

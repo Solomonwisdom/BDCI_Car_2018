@@ -7,7 +7,6 @@ from sklearn.linear_model import LogisticRegression
 from skmultilearn.problem_transform import BinaryRelevance, ClassifierChain, LabelPowerset
 
 
-sys.path.append("..")
 from utils.data_helper import load_attr_data, load_w2v, load_pos, load_char2id, parse_json, load_test_data
 import attribute_level.networks2 as networks
 import utils.train_single as train_single
@@ -22,6 +21,9 @@ import shutil
 import time
 import pickle
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+sys.path.append("ROOT_DIR")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--EPOCHS", type=int, default=5)
@@ -106,7 +108,7 @@ class AttributeClassifier:  # Neural network method
 
         if args.use_elmo != 0:
             import h5py
-            elmo_dict = h5py.File('../embedding/embeddings_elmo_ly-1.hdf5', 'r')
+            elmo_dict = h5py.File(ROOT_DIR+'/embedding/embeddings_elmo_ly-1.hdf5', 'r')
             for s in train_raw_data[0]:
                 sentence = '\t'.join(s)
                 sentence = sentence.replace('.', '$period$')
@@ -156,20 +158,20 @@ def split_dev(train_texts, train_labels, folds=5):
 
 
 def main():
-    f_train = "../data/train.txt"
+    f_train = ROOT_DIR+"/data/train.txt"
     # f_test = "data/test_attr2.txt"
     if args.w2v == "merge":
-        f_w2v = "../embedding/embedding_all_merge_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
     elif args.w2v == "fasttext":
-        f_w2v = "../embedding/embedding_all_fasttext_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_fasttext_300.txt"
     elif args.w2v == "fasttext2":
-        f_w2v = "../embedding/embedding_all_fasttext2_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_fasttext2_300.txt"
     elif args.w2v == "tencent":
-        f_w2v = "../embedding/embedding_all_tencent_200.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_tencent_200.txt"
     else:
         print("error, no embedding")
         exit(-1)
-    f_dict = "../dataset/attribute.json"
+    f_dict = ROOT_DIR+"/dataset/attribute.json"
     print(f_w2v)
     train_texts, train_labels = load_attr_data(filename=f_train)
     train_texts, train_labels, test_texts, test_labels = split_dev(train_texts, train_labels)
@@ -180,7 +182,7 @@ def main():
         os.mkdir("%s" % args.check_dir)
     # test_texts, test_labels = load_attr_data(filename=f_test)
     W, word2index2 = load_w2v(f_w2v)
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
     assert word2index == word2index2
     attr_list, attr_dict = parse_json(f_dict)
     print(list(attr_dict.keys()))
@@ -206,25 +208,25 @@ def kfold_split(length, k=5):
 
 
 def ensemble():
-    f_train = "../data/train.txt"
+    f_train = ROOT_DIR+"/data/train.txt"
     # f_test = "data/test_attr2.txt"
     if args.w2v == "merge":
-        f_w2v = "../embedding/embedding_all_merge_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
     elif args.w2v == "fasttext2":
-        f_w2v = "../embedding/embedding_all_fasttext2_300.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_fasttext2_300.txt"
     elif args.w2v == "tencent":
-        f_w2v = "../embedding/embedding_all_tencent_200.txt"
+        f_w2v = ROOT_DIR+"/embedding/embedding_all_tencent_200.txt"
     else:
         print("error, no embedding")
         exit(-1)
-    f_dict = "../dataset/attribute.json"
+    f_dict = ROOT_DIR+"/dataset/attribute.json"
     print(f_train)
     print(f_w2v)
     if not os.path.exists("%s" % args.check_dir):
         os.mkdir("%s" % args.check_dir)
     raw_texts, raw_labels = load_attr_data(filename=f_train)
     W, word2index2 = load_w2v(f_w2v)
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
     assert word2index == word2index2
     attr_list, attr_dict = parse_json(f_dict)
     kf = 0
@@ -253,10 +255,10 @@ def test():
 
     test_file = "data/attribute_test.txt"
     test_texts = load_test_data(test_file)
-    f_w2v = "../embedding/embedding_all_merge_300.txt"
+    f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
     W, word2index = load_w2v(f_w2v)
 
-    f_dict = "../dataset/attribute.json"
+    f_dict = ROOT_DIR+"/dataset/attribute.json"
     attr_list, attr_dict = parse_json(f_dict)
 
     test_data = Data((test_texts, None), word2index)
@@ -280,8 +282,8 @@ def dev():
 
     f_train = "data/attribute_data.txt"
     # f_test = "data/test_attr2.txt"
-    f_w2v = "../embedding/embedding_all_merge_300.txt"
-    f_dict = "../dataset/attribute.json"
+    f_w2v = ROOT_DIR+"/embedding/embedding_all_merge_300.txt"
+    f_dict = ROOT_DIR+"/dataset/attribute.json"
     print(f_w2v)
     raw_texts, raw_labels = load_attr_data(filename=f_train)
     W, word2index = load_w2v(f_w2v)
@@ -300,7 +302,7 @@ def dev():
 def load_elmo(test_texts):
     test_elmo = []
     import h5py
-    elmo_dict = h5py.File('../embedding/embeddings_elmo_ly-1.hdf5', 'r')
+    elmo_dict = h5py.File(ROOT_DIR+'/embedding/embeddings_elmo_ly-1.hdf5', 'r')
     for s in test_texts:
         sentence = '\t'.join(s)
         sentence = sentence.replace('.', '$period$')
@@ -370,13 +372,13 @@ def load_oof(dir):
 
 def stacking():
     saved = True if args.saved != 0 else False
-    f_train = "../data/train.txt"
-    test_file = "../data/test.txt"
+    f_train = ROOT_DIR+"/data/train.txt"
+    test_file = ROOT_DIR+"/data/test.txt"
     test_texts = load_test_data(test_file)
     raw_texts, raw_labels = load_attr_data(filename=f_train)
-    word2index = pickle.load(open("../data/vocabulary.pkl", 'rb'))
+    word2index = pickle.load(open(ROOT_DIR+"/data/vocabulary.pkl", 'rb'))
 
-    f_dict = "../dataset/attribute.json"
+    f_dict = ROOT_DIR+"/dataset/attribute.json"
     attr_list, attr_dict = parse_json(f_dict)
 
     paths = args.test_dir.split('#')
@@ -430,7 +432,7 @@ def stacking():
 
     test_predict = np.stack(test_predict, axis=1)
     print(test_predict.shape)
-    fw = codecs.open("../data/test_predict_aspect_ensemble.txt", 'w', encoding='utf-8')
+    fw = codecs.open(ROOT_DIR+"/data/test_predict_aspect_ensemble.txt", 'w', encoding='utf-8')
 
     for prob in test_predict:
         attributes = []
@@ -450,8 +452,8 @@ def stacking():
         fw.write('|'.join(attributes) + '\n')
     time_stamp = time.asctime().replace(':', '_').split()
     fw.close()
-    shutil.copy2("../data/test_predict_aspect_ensemble.txt",
-                 "../data/backup/test_predict_aspect_ensemble_%s.txt" % time_stamp)
+    shutil.copy2(ROOT_DIR+"/data/test_predict_aspect_ensemble.txt",
+                 ROOT_DIR+"/data/backup/test_predict_aspect_ensemble_%s.txt" % time_stamp)
 
 
 if __name__ == '__main__':
