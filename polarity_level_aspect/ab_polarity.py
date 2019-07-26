@@ -543,6 +543,7 @@ def stacking():
     paths = args.test_dir.split('#')
     models_files = []
     for path in paths:
+        path = BASE_DIR + '/' + path
         models_files.append([os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))])
     test_data = Data3((test_texts, None, test_aspects), word2index, polarity_dict, args, target_dict=attr_dict)
     if args.use_elmo != 0:
@@ -554,6 +555,7 @@ def stacking():
     x_test = []
     for dir, checkpoints_per_model in zip(paths, models_files):
         print(dir, checkpoints_per_model)
+        dir = BASE_DIR + '/' + dir
         if saved == 1:
             oof_train, oof_train_y, oof_test = load_oof_dir(dir)
         else:
