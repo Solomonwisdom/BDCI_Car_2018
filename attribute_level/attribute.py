@@ -1,11 +1,15 @@
 import codecs
 # import torch
+import os
 import sys
 from sklearn.model_selection import StratifiedKFold
 from sklearn.linear_model import LogisticRegression
 # import xgboost as xgb
 from skmultilearn.problem_transform import BinaryRelevance, ClassifierChain, LabelPowerset
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+sys.path.append(ROOT_DIR)
 
 from utils.data_helper import load_attr_data, load_w2v, load_pos, load_char2id, parse_json, load_test_data
 import attribute_level.networks2 as networks
@@ -16,14 +20,10 @@ import utils.train as train
 import torch
 import numpy as np
 import argparse
-import os
 import shutil
 import time
 import pickle
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(BASE_DIR)
-sys.path.append("ROOT_DIR")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--EPOCHS", type=int, default=5)
@@ -465,4 +465,3 @@ if __name__ == '__main__':
         ensemble()
     elif args.mode == 2:
         stacking()
-

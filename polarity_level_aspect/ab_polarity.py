@@ -1,5 +1,10 @@
 import codecs
+import os
 import sys
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+sys.path.append(ROOT_DIR)
 
 from utils.data_helper import load_attr_data, load_w2v, load_ab_test, load_abp_data, parse_json, load_abp_raw
 
@@ -12,7 +17,6 @@ import argparse
 import numpy as np
 import torch
 from collections import Counter
-import os
 import shutil
 import time
 import pickle
@@ -22,10 +26,6 @@ from sklearn.linear_model import LogisticRegression
 # import xgboost as xgb
 # from lightgbm import LGBMClassifier
 
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(BASE_DIR)
-sys.path.append("ROOT_DIR")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--EPOCHS", type=int, default=5)

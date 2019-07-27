@@ -82,12 +82,9 @@
 * 因为训练模型比较久而且模型比较大，所以我们提供了所有checkpoint对OOF和测试集的预测结果，只需要简单的做一下stacking就可以得到我们提交的最好结果：
 
 ```
-cd attribute_level
-python attribute.py --mode 2 --test_dir cp_CNN_0#cp_CNN_ft2#cp_CNN_2#cp_CNN_tc#cp_AttA3_0#cp_AttA3_ft2#cp_AttA3_2#cp_AttA3_tc#cp_Bert --saved 1
-cd ../polarity_level_aspect
-python ab_polarity.py --mode 2 --test_dir cp_HEAT_0#cp_AT_LSTM_0#cp_HEAT_ft2#cp_AT_LSTM_ft2#cp_HEAT_2#cp_AT_LSTM_2#cp_HEAT_tc#cp_AT_LSTM_tc#cp_GCAE_0#cp_GCAE_2#cp_GCAE_ft2#cp_GCAE_tc#cp_Bert --saved 1
-cd ../data
-python submit2.py
+python /workspace/BDCI_Car_2018/attribute_level/attribute.py --mode 2 --test_dir cp_CNN_0#cp_CNN_ft2#cp_CNN_2#cp_CNN_tc#cp_AttA3_0#cp_AttA3_ft2#cp_AttA3_2#cp_AttA3_tc#cp_Bert --saved 1
+python /workspace/BDCI_Car_2018/polarity_level_aspect/ab_polarity.py --mode 2 --test_dir cp_HEAT_0#cp_AT_LSTM_0#cp_HEAT_ft2#cp_AT_LSTM_ft2#cp_HEAT_2#cp_AT_LSTM_2#cp_HEAT_tc#cp_AT_LSTM_tc#cp_GCAE_0#cp_GCAE_2#cp_GCAE_ft2#cp_GCAE_tc#cp_Bert --saved 1
+python /workspace/BDCI_Car_2018/data/submit2.py
 ```
 最后生成的submit2.csv即可用于提交。
 * 当然如果想要从头复现，可以看下面的说明：
