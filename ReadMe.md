@@ -29,7 +29,7 @@
 * 其中：
     * backup_polarity.zip:保存了用来预测情感极性的三个模型四种embedding五折共60个checkpoint。请将其backup_polarity里面的各个文件夹放在polarity_level_aspect/目录下。
     * backup_aspect.zip保存了用来预测主题的两个模型四种embedding五折共40个checkpoint。请将backup里面的各个文件夹放在attribute_level/目录下。
-    * backup_bert.zip保存了分别用来预测主题和情感极性五折共是十个checkpoint。请将其里面的两个个文件夹放在berrt/glue_data/目录下。并且要将polarity_ensemble_online_submit重命名为polarity_ensemble_online
+    * backup_bert.zip保存了分别用来预测主题和情感极性五折共是十个checkpoint。请将其里面的两个个文件夹放在bert/glue_data/目录下。并且要将polarity_ensemble_online_submit重命名为polarity_ensemble_online
     * backup_chinese_bert.zip 保存了我们将谷歌开源的中文BERT转为pytorch版本的预训练模型，可以用来做fine tune。请将chinese_L-12_H-768_A-12文件夹放在bert/目录下。
     * backup_embedding.zip 保存了我们使用的embedding， 主要是一个由elmo得到的句子表示。请将backup_embedding下的词向量放在embedding/目录下。
 
